@@ -40,8 +40,12 @@ var app = (function () {
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpoint', function (eventbody) {
-                //var theObject=JSON.parse();
-                alert(eventbody.body);
+                var theObject=JSON.parse(eventbody.body);
+                var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
+                ctx.beginPath();
+                ctx.arc(theObject.x, theObject.y, 3, 0, 2 * Math.PI);
+                ctx.stroke();
                 
             });
         });
