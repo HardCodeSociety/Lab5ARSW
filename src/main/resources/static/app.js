@@ -30,7 +30,25 @@ var app = (function () {
         };
     };
 
+    var connectAndSuscribeById = function (index){
+        console.info('Connecting to WS...');
+        var socket = new SockJS('/stompendpoint');
+        stompClient = Stomp.over(socket);       
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/newpoint.'+index, function (eventbody) {
+                var theObject=JSON.parse(eventbody.body);
+                var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
+                ctx.beginPath();
+                ctx.arc(theObject.x, theObject.y, 3, 0, 2 * Math.PI);
+                ctx.stroke();
+                
+            });
+        });
 
+        
+    };
     var connectAndSubscribe = function () {
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
