@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Pinturillo Copy</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/webjars/jquery/jquery.min.js"></script>
@@ -28,12 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </head>
 
 
-    
+    <!---->
     <body onload="app.init()">
         X:<input id="x" type="number"/>
         Y:<input id="y" type="number"/>                
         <button onclick="app.publishPoint($('#x').val(),$('#y').val())">Send point</button>        
-        Identifier:<input id="ident" type="number"/>        
+        Identifier:<input id="ident" type="number" value="1"/>        
+        <button onClick="app.connectAndSusById($('#ident').val())"> Connect </button>
         <canvas id="canvas" width="800" height="600"></canvas>
     </body>
 </html>
