@@ -46,6 +46,20 @@ var app = (function () {
                 ctx.stroke();
                 
             });
+            
+            stompClient.subscribe('/topic/newpolygon.'+index , function (points) {   
+                var polygonJS = JSON.parse(points.body);
+                var c = document.getElementById("canvas");
+                var ctx = c.getContext("2d");
+                ctx.fillStyle = '#26C8ED';
+                ctx.beginPath();
+                ctx.moveTo(polygonJS[0].x, polygonJS[0].y);
+                for (i = 1; i < polygonJS.length; i++) {
+                    ctx.lineTo(polygonJS[i].x, polygonJS[i].y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+            });
         });
 
         
@@ -53,9 +67,7 @@ var app = (function () {
     var connectAndSubscribe = function () {
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
-        stompClient = Stomp.over(socket);
-        
-        //subscribe to /topic/TOPICXX when connections succeed
+        stompClient = Stomp.over(socket);       
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpoint', function (eventbody) {
@@ -76,10 +88,12 @@ var app = (function () {
     return {
 
         init: function () {
-            var can = document.getElementById("canvas");
-            
-            //websocket connection
-            //connectAndSubscribe();
+            var canVal = document.getElementById("canvas");
+            canVal.addEventListener('click', function(event){
+                var ident = document.getElementById("ident").value;
+                stompClient.send("/app/newpoint."+ident, {}, JSON.stringify(new Point(getMousePosition(event).x,getMousePosition(event).y)));
+            });
+            connectAndSubscribe();
         },
         connectAndSusById: function(index){
               var can = document.getElementById("canvas");
@@ -91,8 +105,8 @@ var app = (function () {
             var pt=new Point(px,py);
             console.info("publishing point at "+pt);
             addPointToCanvas(pt);
-
-            //publicar el evento
+            var ident = document.getElementById("ident").value;
+            stompClient.send("/topic/newpoint."+ident, {}, JSON.stringify(pt)); 
         },
 
         disconnect: function () {
