@@ -36,7 +36,7 @@ var app = (function () {
         stompClient = Stomp.over(socket);       
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            canvasPath = '/topic/newpoint.'+index;
+            canvasPath = '/app/newpoint.'+index;
             stompClient.subscribe('/topic/newpoint.'+index, function (eventbody) {
                 var theObject=JSON.parse(eventbody.body);
                 var c = document.getElementById("canvas");
