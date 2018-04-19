@@ -82,17 +82,21 @@ var app = (function () {
         });
 
     };
-    
+    var puntoActual = function(evt){
+		var point = getMousePosition(evt);
+		app.publishPoint(point.x,point.y);
+    };
     
 
     return {
 
         init: function () {
             var canVal = document.getElementById("canvas");
-            canVal.addEventListener('click', function(event){
-                var ident = document.getElementById("ident").value;
-                stompClient.send("/app/newpoint."+ident, {}, JSON.stringify(new Point(getMousePosition(event).x,getMousePosition(event).y)));
-            });
+            if(window.PointEvent){
+		canVal.addEventListener("pointerdown", puntoActual);
+            }else{
+		canVal.addEventListener("mousedown", puntoActual);
+            }
             connectAndSubscribe();
         },
         connectAndSusById: function(index){
